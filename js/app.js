@@ -64,7 +64,8 @@ app.controller('myController', function ($scope, $uibModal, $log) {
                     return {
                         name: name,
                         configName: configName,
-                        operation: operation
+                        operation: operation,
+                        array: $scope.items
                     }
                 }
             }
@@ -137,9 +138,11 @@ app.controller('OnConfigurationCtrl', function ($scope, $uibModalInstance, items
     $scope.cancelText = 'Cancel';
 
     $scope.showConfigError = false;
+    $scope.showDuplicateError = false;
 
     $scope.ok = function () {
-        if ($scope.configurationName || items.operation == opts.delete) {
+        findDuplicate( items.name, $scope.configurationName);
+        if (($scope.configurationName || items.operation == opts.delete) && !$scope.showDuplicateError) {
             $uibModalInstance.close({
                 name: items.name,
                 configName: items.configName,
@@ -148,6 +151,15 @@ app.controller('OnConfigurationCtrl', function ($scope, $uibModalInstance, items
             });
         } else {
             $scope.showConfigError = !$scope.configurationName
+        }
+    };
+
+    var findDuplicate = function(title, newConfigName){
+        var mainObject = _.findWhere(items.array, {fname: title});
+        if(_.findWhere(mainObject.configurations, {'configName': newConfigName})){
+            $scope.showDuplicateError = true;
+        }else{
+            $scope.showDuplicateError = false;
         }
     };
 
