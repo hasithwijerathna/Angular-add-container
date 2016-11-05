@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" ng-app="sampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/ui-bootstrap-tpls-2.2.0.min.js"></script>
+    <script src="js/app.js"></script>
+
+</head>
+<body ng-controller="myController">
+    <div class="jumbotron">
+        <div class="container">
+            <h1>{{title}}</h1>
+            <p>Bootstrap requires a containing element to wrap site contents and house our grid system. You may choose one of two containers to use in your projects. Note that, due to padding and more, neither container is nestable.</p>
+            <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="open('lg')">Add container.</button>
+        </div>
+    </div>
+    <div class="container" ng-repeat="item in items">
+        <span>
+            <h1>{{item.fname}} {{item.lname}} </h1>
+            <a ng-click="deleteItem($index)">Delete</a>
+        </span>
+        <p>Bootstrap includes a responsive, mobile first fluid grid system that appropriately scales up to 12 columns as the device or viewport size increases. It includes predefined classes for easy layout options, as well as powerful mixins for generating more semantic layouts.</p>
+        <button type="button" class="btn btn-primary btn-sm pull-right" ng-click="onConfiguration(item.fname, 'notUse', 'add')">Add Configuration.</button>
+        <strong ng-hide="item.configurations.length">No configuration Available</strong>
+        <table class="table table-bordered" ng-show="item.configurations.length">
+            <tr>
+                <th>Configuration Name</th>
+                <th>Action</th>
+            </tr>
+            <tr ng-repeat="conf in item.configurations">
+                <td>{{conf.configName}}</td>
+                <td>
+                    <a ng-click="onConfiguration(item.fname, conf.configName, 'edit')">Edit</a>
+                    <a ng-click="onConfiguration(item.fname, conf.configName, 'delete')">Delete</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
+
+<script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">I'm a modal! <span class="close pull-right "></span></h3>
+    </div>
+    <div class="modal-body" id="modal-body">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="firstName" class="col-sm-2 control-label">*First Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="firstName" ng-model="firstName" placeholder="First name">
+                    <span ng-show="showFNameError" class="error">First name cannot be empty</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="lastName" class="col-sm-2 control-label">*Last Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="lastName" ng-model="lastName" placeholder="Last name">
+                    <span ng-show="showLNameError" class="error">Last name cannot be empty</span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" type="button" ng-click="ok()">Add</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="onConfigurationOperationModel.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add configuration<span class="close pull-right "></span></h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal">
+            <div class="form-group" ng-show="isShow">
+                <label for="configurationName" class="col-sm-2 control-label">Configuration Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="configurationName" ng-model="configurationName" placeholder="Configuration Name">
+                    <span ng-show="showConfigError" class="error">Config name cannot be empty</span>
+                </div>
+            </div>
+            <p ng-hide="isShow">Do you want to delete item</p>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="cancel()">{{cancelText}}</button>
+        <button class="btn btn-primary" type="button" ng-click="ok()">{{okText}}</button>
+    </div>
+</script>
