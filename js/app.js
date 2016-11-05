@@ -3,7 +3,7 @@
  */
 var app = angular.module('sampleApp', ['ui.bootstrap']);
 
-app.controller('myController', function($scope, $uibModal, $log){
+app.controller('myController', function ($scope, $uibModal, $log) {
     $scope.title = 'Sample app';
 
     $scope.items = [
@@ -46,11 +46,11 @@ app.controller('myController', function($scope, $uibModal, $log){
         });
     };
 
-    $scope.addMainElement = function(fname, lname){
-        $scope.items.push({'fname':fname , 'lname':lname, 'configurations':[]});
+    $scope.addMainElement = function (fname, lname) {
+        $scope.items.push({'fname': fname, 'lname': lname, 'configurations': []});
     };
 
-    $scope.onConfiguration = function(name, configName, operation){
+    $scope.onConfiguration = function (name, configName, operation) {
         var modalInstance = $uibModal.open({
             animation: true,
             ariaLabelledBy: 'modal-title',
@@ -77,51 +77,42 @@ app.controller('myController', function($scope, $uibModal, $log){
         });
     };
 
-    $scope.onItemOperate = function(title, confName, newConfigName, operation){
-        angular.forEach($scope.items, function(item, itemIndex){
-            if(item.fname==title){
-                if(operation == 'add'){
-                    item.configurations.push({'configName':newConfigName});
-                }else{
-                    angular.forEach(item.configurations, function(config, index){
-                        if(config.configName == confName){
-                            if(operation == 'edit'){
-                                config.configName = newConfigName;
-                            }
-                            if(operation == 'delete'){
-                                $scope.items[itemIndex].configurations.splice(index,1);
-                            }
-                        }
-                    });
-                }
-            }
-        });
+    $scope.onItemOperate = function (title, confName, newConfigName, operation) {
+        var mainObject = _.findWhere($scope.items, {fname: title});
+
+        if (operation == 'add') {
+            mainObject.configurations.push({'configName': newConfigName});
+        }
+
+        if (operation == 'edit') {
+            var configObject = _.findWhere(mainObject.configurations, {configName: confName});
+            configObject.configName = newConfigName;
+        }
+
+        if (operation == 'delete') {
+            var index = _.findIndex(mainObject.configurations, {configName: confName});
+            mainObject.configurations.splice(index, 1);
+        }
     };
 
-    $scope.deleteItem = function(index){
-        $scope.items.splice(index,1);
+    $scope.deleteItem = function (firstname, lastname) {
+        var index = _.findIndex($scope.items, {fname: firstname, lname: lastname});
+        $scope.items.splice(index, 1);
     };
-
 });
 
 app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {
     $scope.items = items;
-
-    var data = {
-        firstName: $scope.firstName,
-        lastName: $scope.lastName
-    };
-
     $scope.showFNameError = false;
     $scope.showLNameError = false;
 
     $scope.ok = function () {
-        if($scope.firstName && $scope.lastName){
+        if ($scope.firstName && $scope.lastName) {
             $uibModalInstance.close({
                 firstName: $scope.firstName,
                 lastName: $scope.lastName
             });
-        }else{
+        } else {
             $scope.showFNameError = !$scope.firstName;
             $scope.showLNameError = !$scope.lastName;
         }
@@ -132,30 +123,30 @@ app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) 
     };
 });
 
-app.controller('OnConfigurationCtrl', function($scope, $uibModalInstance, items){
+app.controller('OnConfigurationCtrl', function ($scope, $uibModalInstance, items) {
 
     var opts = {
         add: 'add',
         edit: 'edit',
-        delete : 'delete'
+        delete: 'delete'
     };
 
-    $scope.configurationName = items.operation==opts.edit ? items.configName : '';
-    $scope.isShow = (items.operation==opts.add || items.operation==opts.edit) ? true : false;
-    $scope.okText = items.operation==opts.add ? 'Add' : (items.operation==opts.delete ? 'Delete' : 'Edit');
+    $scope.configurationName = items.operation == opts.edit ? items.configName : '';
+    $scope.isShow = (items.operation == opts.add || items.operation == opts.edit) ? true : false;
+    $scope.okText = items.operation == opts.add ? 'Add' : (items.operation == opts.delete ? 'Delete' : 'Edit');
     $scope.cancelText = 'Cancel';
 
     $scope.showConfigError = false;
 
     $scope.ok = function () {
-        if($scope.configurationName || items.operation==opts.delete){
+        if ($scope.configurationName || items.operation == opts.delete) {
             $uibModalInstance.close({
                 name: items.name,
                 configName: items.configName,
                 newConfigName: $scope.configurationName,
                 operation: items.operation
             });
-        }else{
+        } else {
             $scope.showConfigError = !$scope.configurationName
         }
     };

@@ -11,6 +11,7 @@
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
 
+    <script src="js/underscore-min.js"></script>
     <script src="js/angular.min.js"></script>
     <script src="js/ui-bootstrap-tpls-2.2.0.min.js"></script>
     <script src="js/app.js"></script>
@@ -27,7 +28,7 @@
     <div class="container" ng-repeat="item in items">
         <span>
             <h1>{{item.fname}} {{item.lname}} </h1>
-            <a ng-click="deleteItem($index)">Delete</a>
+            <a ng-click="deleteItem(item.fname, item.lname)">Delete</a>
         </span>
         <p>Bootstrap includes a responsive, mobile first fluid grid system that appropriately scales up to 12 columns as the device or viewport size increases. It includes predefined classes for easy layout options, as well as powerful mixins for generating more semantic layouts.</p>
         <button type="button" class="btn btn-primary btn-sm pull-right" ng-click="onConfiguration(item.fname, 'notUse', 'add')">Add Configuration.</button>
